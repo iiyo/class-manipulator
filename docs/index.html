@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>class-manipulator</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <h1 id="class-manipulator">class-manipulator</h1>
+<p>A chainable wrapper API for manipulating a DOM Element’s classes or class strings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-comment">/* global module */</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <h2 id="public-api">Public API</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p><strong>list(element) / list(classString)</strong></p>
+<p>Creates a chainable API for manipulating an element’s list of classes. No changes
+are made to the DOM Element unless <code>.apply()</code> is called.</p>
+<pre><code>DOMElement|string -&gt; object
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">list</span> (<span class="hljs-params">element</span>) </span>{
+    
+    element = <span class="hljs-keyword">typeof</span> element === <span class="hljs-string">"object"</span> ? element : dummy(element);
+    
+    <span class="hljs-keyword">var</span> classes = parse(element), controls;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p><strong>.apply()</strong></p>
+<p>Applies class list to the source element.</p>
+<pre><code><span class="hljs-keyword">void</span> -&gt; object
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">apply</span> (<span class="hljs-params"></span>) </span>{
+        element.setAttribute(<span class="hljs-string">"class"</span>, toString());
+        <span class="hljs-keyword">return</span> controls;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p><strong>.add(name)</strong></p>
+<p>Adds a class to the element’s list of class names.</p>
+<pre><code>string -&gt; object
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">add</span> (<span class="hljs-params">name</span>) </span>{
+        
+        <span class="hljs-keyword">if</span> (hasSpaces(name)) {
+            <span class="hljs-keyword">return</span> addMany(classStringToArray(name));
+        }
+        
+        <span class="hljs-keyword">if</span> (!has(name)) {
+            classes.push(name);
+        }
+        
+        <span class="hljs-keyword">return</span> controls;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p><strong>.addMany(names)</strong></p>
+<p>Adds many classes to the list at once.</p>
+<pre><code>[string] -&gt; object
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addMany</span> (<span class="hljs-params">newClasses</span>) </span>{
+        
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(newClasses)) {
+            <span class="hljs-keyword">return</span> add(newClasses);
+        }
+        
+        newClasses.forEach(add);
+        
+        <span class="hljs-keyword">return</span> controls;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p><strong>.has(name)</strong></p>
+<p>Checks whether a class is in the element’s list of class names.</p>
+<pre><code>string -&gt; boolean
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">has</span> (<span class="hljs-params">name</span>) </span>{
+        
+        <span class="hljs-keyword">if</span> (hasSpaces(name)) {
+            <span class="hljs-keyword">return</span> hasAll(name);
+        }
+        
+        <span class="hljs-keyword">return</span> classes.indexOf(name) &gt;= <span class="hljs-number">0</span>;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p><strong>.hasSome(names)</strong></p>
+<p>Checks whether the list contains at least one of the supplied classes.</p>
+<pre><code>[string] -&gt; boolean
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">hasSome</span> (<span class="hljs-params">names</span>) </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Array</span>.isArray(names) ?
+            names.some(has) :
+            hasSome(classStringToArray(names));
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p><strong>.hasAll(names)</strong></p>
+<p>Checks whether the list contains all of the supplied classes.</p>
+<pre><code>[string] -&gt; boolean
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">hasAll</span> (<span class="hljs-params">names</span>) </span>{
+        <span class="hljs-keyword">return</span> <span class="hljs-built_in">Array</span>.isArray(names) ?
+            names.every(has) :
+            hasAll(classStringToArray(names));
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p><strong>.remove(name)</strong></p>
+<p>Removes a class from the element’s list of class names.</p>
+<pre><code>string -&gt; object
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">remove</span> (<span class="hljs-params">name</span>) </span>{
+        
+        <span class="hljs-keyword">if</span> (hasSpaces(name)) {
+            <span class="hljs-keyword">return</span> removeMany(classStringToArray(name));
+        }
+        
+        <span class="hljs-keyword">if</span> (has(name)) {
+            classes.splice(classes.indexOf(name), <span class="hljs-number">1</span>);
+        }
+        
+        <span class="hljs-keyword">return</span> controls;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p><strong>.removeMany(names)</strong></p>
+<p>Removes many classes from the list at once.</p>
+<pre><code>[string] -&gt; object
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">removeMany</span> (<span class="hljs-params">toRemove</span>) </span>{
+        
+        <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">Array</span>.isArray(toRemove)) {
+            <span class="hljs-keyword">return</span> remove(toRemove);
+        }
+        
+        toRemove.forEach(remove);
+        
+        <span class="hljs-keyword">return</span> controls;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p><strong>.toggle(name)</strong></p>
+<p>Removes a class from the class list when it’s present or adds it to the list when it’s not.</p>
+<pre><code>string -&gt; object
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">toggle</span> (<span class="hljs-params">name</span>) </span>{
+        
+        <span class="hljs-keyword">if</span> (hasSpaces(name)) {
+            <span class="hljs-keyword">return</span> toggleMany(classStringToArray(name));
+        }
+        
+        <span class="hljs-keyword">return</span> (has(name) ? remove(name) : add(name));
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p><strong>.toggleMany(names)</strong></p>
+<p>Toggles many classes at once.</p>
+<pre><code>[string] -&gt; object
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">toggleMany</span> (<span class="hljs-params">names</span>) </span>{
+        
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">Array</span>.isArray(names)) {
+            names.forEach(toggle);
+            <span class="hljs-keyword">return</span> controls;
+        }
+        
+        <span class="hljs-keyword">return</span> toggleMany(classStringToArray(names));
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p><strong>.toArray()</strong></p>
+<p>Creates an array containing all of the list’s class names.</p>
+<pre><code><span class="hljs-keyword">void</span> -&gt; [string]
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">toArray</span> (<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">return</span> classes.slice();
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p><strong>.toString()</strong></p>
+<p>Returns a string containing all the classes in the list separated by a space character.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">toString</span> (<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">return</span> classes.join(<span class="hljs-string">" "</span>);
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p><strong>.copyTo(otherElement)</strong></p>
+<p>Creates a new empty list for another element and copies the source element’s class list to it.</p>
+<pre><code>DOM Element -&gt; object
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">copyTo</span> (<span class="hljs-params">otherElement</span>) </span>{
+        <span class="hljs-keyword">return</span> list(otherElement).clear().addMany(classes);
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p><strong>.clear()</strong></p>
+<p>Removes all classes from the list.</p>
+<pre><code><span class="hljs-keyword">void</span> -&gt; object
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">clear</span> (<span class="hljs-params"></span>) </span>{
+        classes.length = <span class="hljs-number">0</span>;
+        <span class="hljs-keyword">return</span> controls;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p><strong>.filter(fn)</strong></p>
+<p>Removes those class names from the list that fail a predicate test function.</p>
+<pre><code>(string -&gt; number -&gt; object -&gt; boolean) -&gt; object
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">filter</span> (<span class="hljs-params">fn</span>) </span>{
+        
+        classes.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, i</span>) </span>{
+            <span class="hljs-keyword">if</span> (!fn(name, i, controls)) {
+                remove(name);
+            }
+        });
+        
+        <span class="hljs-keyword">return</span> controls;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p><strong>.sort([fn])</strong></p>
+<p>Sorts the names in place. A custom sort function can be applied optionally. It must have
+the same signature as JS Array.prototype.sort() callbacks.</p>
+<pre><code><span class="hljs-keyword">void</span>|<span class="hljs-function"><span class="hljs-keyword">function</span> -&gt; <span class="hljs-title">object</span></span>
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sort</span> (<span class="hljs-params">fn</span>) </span>{
+        classes.sort(fn);
+        <span class="hljs-keyword">return</span> controls;
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p><strong>.size()</strong></p>
+<p>Returns the number of classes in the list.</p>
+<pre><code><span class="hljs-keyword">void</span> -&gt; number
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">size</span> (<span class="hljs-params"></span>) </span>{
+        <span class="hljs-keyword">return</span> classes.length;
+    }
+    
+    controls = {
+        add: add,
+        addMany: addMany,
+        has: has,
+        hasSome: hasSome,
+        hasAll: hasAll,
+        remove: remove,
+        removeMany: removeMany,
+        toggle: toggle,
+        toggleMany: toggleMany,
+        apply: apply,
+        clear: clear,
+        copyTo: copyTo,
+        toArray: toArray,
+        toString: toString,
+        filter: filter,
+        sort: sort,
+        size: size
+    };
+    
+    <span class="hljs-keyword">return</span> controls;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p><strong>add(element, name)</strong></p>
+<p>Adds a class to a DOM Element.</p>
+<p>   DOM Element -&gt; string -&gt; object</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">add</span> (<span class="hljs-params">element, name</span>) </span>{
+    <span class="hljs-keyword">return</span> list(element).add(name).apply();
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p><strong>remove(element, name)</strong></p>
+<p>Removes a class from a DOM Element.</p>
+<pre><code>DOM Element -&gt; string -&gt; object
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">remove</span> (<span class="hljs-params">element, name</span>) </span>{
+    <span class="hljs-keyword">return</span> list(element).remove(name).apply();
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p><strong>toggle(element, name)</strong></p>
+<p>Removes a class from a DOM Element when it has the class or adds it when the element doesn’t
+have it.</p>
+<pre><code>DOMElement -&gt; string -&gt; object
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">toggle</span> (<span class="hljs-params">element, name</span>) </span>{
+    <span class="hljs-keyword">return</span> list(element).toggle(name).apply();
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p><strong>has(element, name)</strong></p>
+<p>Checks whether a DOM Element has a class.</p>
+<pre><code>DOMElement -&gt; string -&gt; boolean
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">has</span> (<span class="hljs-params">element, name</span>) </span>{
+    <span class="hljs-keyword">return</span> list(element).has(name);
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <h2 id="exported-functions">Exported functions</h2>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-built_in">module</span>.exports = {
+    add: add,
+    remove: remove,
+    toggle: toggle,
+    has: has,
+    list: list
+};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <h2 id="private-functions">Private functions</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <p>Extracts the class names from a DOM Element and returns them in an array.</p>
+<pre><code>DOMElement -&gt; [string]
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">parse</span> (<span class="hljs-params">element</span>) </span>{
+    <span class="hljs-keyword">return</span> classStringToArray(element.getAttribute(<span class="hljs-string">"class"</span>) || <span class="hljs-string">""</span>);
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <pre><code>string -&gt; [string]
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">classStringToArray</span> (<span class="hljs-params">classString</span>) </span>{
+    <span class="hljs-keyword">return</span> (<span class="hljs-string">""</span> + classString).replace(<span class="hljs-regexp">/\s+/</span>, <span class="hljs-string">" "</span>).trim().split(<span class="hljs-string">" "</span>).filter(stringNotEmpty);
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <pre><code>string -&gt; boolean
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">stringNotEmpty</span> (<span class="hljs-params">str</span>) </span>{
+    <span class="hljs-keyword">return</span> str !== <span class="hljs-string">""</span>;
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <pre><code>string -&gt; boolean
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">hasSpaces</span> (<span class="hljs-params">str</span>) </span>{
+    <span class="hljs-keyword">return</span> !!str.match(<span class="hljs-regexp">/\s/</span>);
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>Creates a dummy DOMElement for when we don’t have an actual one for a list.</p>
+<pre><code>string -&gt; object
+</code></pre>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">dummy</span> (<span class="hljs-params">classList</span>) </span>{
+    
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> classList !== <span class="hljs-string">"string"</span>) {
+        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Function list() expects an object or string as its argument."</span>);
+    }
+    
+    <span class="hljs-keyword">var</span> attributes = {
+        <span class="hljs-string">"class"</span>: <span class="hljs-string">""</span> + classStringToArray(classList).join(<span class="hljs-string">" "</span>)
+    };
+    
+    <span class="hljs-keyword">return</span> {
+        setAttribute: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name, value</span>) </span>{ attributes[name] = value; },
+        getAttribute: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">name</span>) </span>{ <span class="hljs-keyword">return</span> attributes[name]; }
+    };
+}</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
