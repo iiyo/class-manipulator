@@ -1,0 +1,28 @@
+{
+  "name": "class-manipulator",
+  "version": "1.0.0",
+  "description": "Chainable wrapper API for manipulating a DOM Element's classes or a class string",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "mocha tests.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iiyo/class-manipulator.git"
+  },
+  "keywords": [
+    "css",
+    "classes",
+    "wrapper",
+    "classList"
+  ],
+  "author": "J. Steinbeck",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/iiyo/class-manipulator/issues"
+  },
+  "homepage": "https://github.com/iiyo/class-manipulator#readme"
+}
